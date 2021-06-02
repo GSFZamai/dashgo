@@ -1,43 +1,48 @@
-import { Flex, FormLabel, Input as ChakraInput, FormControl, InputProps as ChakraInputProps } from '@chakra-ui/react';
-import { ReactElement } from 'react';
+import { FormLabel, Input as ChakraInput, FormControl, InputProps as ChakraInputProps, InputGroup, FormErrorMessage } from '@chakra-ui/react';
+import { forwardRef, ReactElement, ForwardRefRenderFunction } from 'react';
+import { FieldError } from 'react-hook-form';
 
 interface InputProps extends ChakraInputProps {
     name: string;
     label?: string;
     children?: ReactElement;
+    error?: FieldError;
 }
 
-export function Input({name, label, children, ...rest}: InputProps) {
-    return (
 
-        <FormControl>
+
+const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({error = null ,name, label, children, ...rest}: InputProps, ref) => {
+    return (
+      
+      <InputGroup>
+        <FormControl isInvalid={!!error}>
         { !!label && <FormLabel htmlFor={name}>{label}</FormLabel>}
 
-        <Flex 
-          as="label"
-          flex="1"
-          maxWidth={400}
-          color="gray.200"
-          bg="gray.800"
-          borderRadius="full"
-        >
+          {children}
           <ChakraInput
               id={name}
               name={name}
               focusBorderColor="blue.400"
-                bgColor= "gray.900"
-                variant="filled"
-                _hover={{
-                  bgColor: "gray.900"
-                }}
-                size="lg"
+              bgColor= "gray.900"
+              variant="filled"
+              _hover={{
+                bgColor: "gray.900"
+              }}
+              size="lg"
+              ref={ref}
               {...rest}
-          />
-          {children}
-        </Flex>
+              />
 
-    </FormControl>
+              {!!error && (
+                <FormErrorMessage>
+                    {error.message}
+                </FormErrorMessage>
+              )}
+        </FormControl>
+      </InputGroup>
 
     )
 
 }
+
+export const Input = forwardRef(InputBase);
