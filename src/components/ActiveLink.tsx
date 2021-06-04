@@ -13,8 +13,6 @@ export function ActiveLink({children, shouldMatchExactHref = false, ...rest}: Ac
     
     let isActive = false;
 
-    console.log(rest.as)
-
     if( shouldMatchExactHref && (asPath === rest.href || asPath === rest.as)) {
         isActive = true;
     }
